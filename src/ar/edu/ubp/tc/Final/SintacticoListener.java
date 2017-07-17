@@ -1,4 +1,4 @@
-// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\javaapplication5\Sintactico.g4 by ANTLR 4.2.2
+// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\ar\edu\u005Cubp\tc\Final\Sintactico.g4 by ANTLR 4.2.2
 package ar.edu.ubp.tc.Final;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
@@ -108,6 +108,17 @@ public interface SintacticoListener extends ParseTreeListener {
 	void exitParametros_funcion_decl(@NotNull SintacticoParser.Parametros_funcion_declContext ctx);
 
 	/**
+	 * Enter a parse tree produced by {@link SintacticoParser#operacion_matematica}.
+	 * @param ctx the parse tree
+	 */
+	void enterOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SintacticoParser#operacion_matematica}.
+	 * @param ctx the parse tree
+	 */
+	void exitOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx);
+
+	/**
 	 * Enter a parse tree produced by {@link SintacticoParser#faltapuntoycoma}.
 	 * @param ctx the parse tree
 	 */
@@ -150,6 +161,17 @@ public interface SintacticoListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link SintacticoParser#variable_operacion}.
+	 * @param ctx the parse tree
+	 */
+	void enterVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SintacticoParser#variable_operacion}.
+	 * @param ctx the parse tree
+	 */
+	void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link SintacticoParser#si}.
@@ -315,6 +337,17 @@ public interface SintacticoListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFaltaparentesis2(@NotNull SintacticoParser.Faltaparentesis2Context ctx);
+
+	/**
+	 * Enter a parse tree produced by {@link SintacticoParser#datos_opMatematica}.
+	 * @param ctx the parse tree
+	 */
+	void enterDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link SintacticoParser#datos_opMatematica}.
+	 * @param ctx the parse tree
+	 */
+	void exitDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx);
 
 	/**
 	 * Enter a parse tree produced by {@link SintacticoParser#declarar_funcion}.

@@ -748,173 +748,190 @@ public class SintacticoBaseListener implements SintacticoListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitVariable(@NotNull SintacticoParser.VariableContext ctx) {
-            Scope sc;
-            Symbol s;
-            String type;
-            if(declarando == 0)
-            {
-               if(en_funcion == 0)
+           
+             if(ctx.variable_operacion() == null)
                {
-                sc = st.getScope(1);
-               }
-               else
-               {
-                  sc = st.currentScope();
-               }
-               s = sc.resolve(ctx.ID().toString());
-               
-               if(s == null && decl_parametros == 0)
-               {
-                  System.out.println("Error, variable " + ctx.ID().toString() + " no declarada. Linea " + ctx.getStart().getLine());
-                  error = true;
-               }
-               else
-               {
-                   if(s != null){
-                       type = sc.getType(ctx.ID().toString());
-                       if(ctx.asignacion()!= null)
+                     Scope sc;
+                    Symbol s;
+                    String type;
+                    if(declarando == 0)
+                    {
+                       if(en_funcion == 0)
                        {
-                           s.setValue(ctx.asignacion().getText().replaceFirst(ctx.asignacion().ASIGNACION().toString(), ""));
-                           if(ctx.asignacion().datos()!= null && ctx.asignacion().datos().ID() != null)
-                           {
-                               if(sc.resolve(ctx.asignacion().datos().ID().toString()) != null) 
+                        sc = st.getScope(1);
+                       }
+                       else
+                       {
+                          sc = st.currentScope();
+                       }
+                       s = sc.resolve(ctx.ID().toString());
+
+                       if(s == null && decl_parametros == 0)
+                       {
+                          System.out.println("Error, variable " + ctx.ID().toString() + " no declarada. Linea " + ctx.getStart().getLine());
+                          error = true;
+                       }
+                       else
+                       {
+                           if(s != null){
+                               type = sc.getType(ctx.ID().toString());
+                               if(ctx.asignacion()!= null)
                                {
-                                   sc.resolve(ctx.asignacion().datos().ID().toString()).setUsed() ;
-                                   if(!st.verifType(type, sc.getType(ctx.asignacion().datos().ID().toString())))
+                                   s.setValue(ctx.asignacion().getText().replaceFirst(ctx.asignacion().ASIGNACION().toString(), ""));
+                                   if(ctx.asignacion().datos()!= null && ctx.asignacion().datos().ID() != null)
                                    {
-                                       System.out.println("1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().datos().ID().toString()
-                                       + " es tipo " + sc.getType(ctx.asignacion().datos().ID().toString()) + ". Linea " + ctx.getStart().getLine());
-                                       error = true;
-                                   }
-                               }
-                           }
-                           else
-                           {
-                               if(ctx.asignacion().datos()!= null && (ctx.asignacion().datos().llamada_funcion() == null && ctx.asignacion().datos().llamada_funcion_mal() == null))
-                               {
-                                   boolean errorTipo = true;
-                                   String tipoVar = "";
-                                  if(ctx.asignacion().datos().CARACTER() != null)
-                                      tipoVar = "char";
-                                  if(ctx.asignacion().datos().ENTERO() != null)
-                                      tipoVar = "int";
-                                  if(ctx.asignacion().datos().FLOTANTE() != null)
-                                      tipoVar = "double";
-                                  if(ctx.asignacion().datos().TRUEFALSE() != null)
-                                      tipoVar = "bool";
-                                  errorTipo = st.verifType(type, tipoVar);
-                                  if(errorTipo == false)
-                                  {
-                                      System.out.println("xxxxx1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().datos().getText() 
-                                                    + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
-                                                    error = true;
-                                  }
-                               }
-                           }
-                           if(ctx.asignacion().operacion() != null)
-                           {
-                               for(int i = 0; i < ctx.asignacion().operacion().size(); i++)
-                               {
-                                   if(ctx.asignacion().operacion(i).datos(0).ID() != null)
-                                   {
-                                       if(sc.resolve(ctx.asignacion().operacion(i).datos(0).ID().toString()) != null) 
+                                       if(sc.resolve(ctx.asignacion().datos().ID().toString()) != null) 
                                        {
-                                           sc.resolve(ctx.asignacion().operacion(i).datos(0).ID().toString()).setUsed();
-                                           if(!st.verifType(type, sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())))
-                                                {
-                                                    System.out.println("2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(0).ID().toString()
-                                                    + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())+ ". Linea " + ctx.getStart().getLine());
-                                                    error = true;
-                                                 }
-                                       }
-                                       else {
-                                           System.out.println("Error, variable " +ctx.asignacion().operacion(i).datos(0).ID().toString() + " no declarada. Linea " + + ctx.getStart().getLine());
-                                           error = true;
+                                           sc.resolve(ctx.asignacion().datos().ID().toString()).setUsed() ;
+                                           if(!st.verifType(type, sc.getType(ctx.asignacion().datos().ID().toString())))
+                                           {
+                                               System.out.println("1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().datos().ID().toString()
+                                               + " es tipo " + sc.getType(ctx.asignacion().datos().ID().toString()) + ". Linea " + ctx.getStart().getLine());
+                                               error = true;
+                                           }
                                        }
                                    }
                                    else
                                    {
-                                       if(ctx.asignacion().operacion(i).datos(0).llamada_funcion() == null && ctx.asignacion().operacion(i).datos(0).llamada_funcion_mal() == null)
+                                       if(ctx.asignacion().datos()!= null && (ctx.asignacion().datos().llamada_funcion() == null && ctx.asignacion().datos().llamada_funcion_mal() == null))
                                        {
-                                            boolean errorTipo = true;
-                                            String tipoVar = "";
-                                            if(ctx.asignacion().operacion(i).datos(0).CARACTER() != null)
-                                                tipoVar = "char";
-                                            if(ctx.asignacion().operacion(i).datos(0).ENTERO() != null)
-                                                tipoVar = "int";
-                                            if(ctx.asignacion().operacion(i).datos(0).FLOTANTE() != null)
-                                                tipoVar = "double";
-                                            if(ctx.asignacion().operacion(i).datos(0).TRUEFALSE() != null)
-                                                tipoVar = "bool";
-                                            errorTipo = st.verifType(type, tipoVar);
-                                            if(errorTipo == false)
-                                            {
-                                                System.out.println("xxxxx2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().operacion(i).datos(0).getText() 
-                                                              + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
-                                                              error = true;
-                                            }
+                                           boolean errorTipo = true;
+                                           String tipoVar = "";
+                                          if(ctx.asignacion().datos().CARACTER() != null)
+                                              tipoVar = "char";
+                                          if(ctx.asignacion().datos().ENTERO() != null)
+                                              tipoVar = "int";
+                                          if(ctx.asignacion().datos().FLOTANTE() != null)
+                                              tipoVar = "double";
+                                          if(ctx.asignacion().datos().TRUEFALSE() != null)
+                                              tipoVar = "bool";
+                                          errorTipo = st.verifType(type, tipoVar);
+                                          if(errorTipo == false)
+                                          {
+                                              System.out.println("xxxxx1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().datos().getText() 
+                                                            + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
+                                                            error = true;
+                                          }
                                        }
                                    }
-                                   
-                                   
-                                   
-                                   if(ctx.asignacion().operacion(i).datos(1) != null && ctx.asignacion().operacion(i).datos(1).ID() != null)
+                                   if(ctx.asignacion().operacion() != null)
                                    {
-                                      if(sc.resolve(ctx.asignacion().operacion(i).datos(1).ID().toString()) != null) 
-                                      {
-                                          sc.resolve(ctx.asignacion().operacion(i).datos(1).ID().toString()).setUsed();
-                                          if(!st.verifType(type , sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())))
-                                                {
-                                                    System.out.println("3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(1).ID().toString()
-                                                    + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())+ ". Linea " + ctx.getStart().getLine());
-                                                    error = true;
-                                                 }
-                                          
-                                      } 
-                                      else {
-                                             System.out.println("Error, variable " +ctx.asignacion().operacion(i).datos(1).ID().toString() + " no declarada. Linea " + ctx.getStart().getLine()  );
-                                             error = true;
-                                            }
-                                   }
-                                   else
-                                   {
-                                     if(ctx.asignacion().operacion(i).datos(1) != null && ctx.asignacion().operacion(i).datos(1).llamada_funcion() == null && ctx.asignacion().operacion(i).datos(1).llamada_funcion_mal() == null)
-                                     {
-                                       boolean errorTipo = true;
-                                       String tipoVar = "";
-                                       if( ctx.asignacion().operacion(i).datos(1).CARACTER() != null)
-                                           tipoVar = "char";
-                                       if( ctx.asignacion().operacion(i).datos(1).ENTERO() != null)
-                                           tipoVar = "int";
-                                       if( ctx.asignacion().operacion(i).datos(1).FLOTANTE() != null)
-                                           tipoVar = "double";
-                                       if(ctx.asignacion().operacion(i).datos(1).TRUEFALSE() != null)
-                                           tipoVar = "bool";
-                                       errorTipo = st.verifType(type, tipoVar);
-                                       if(errorTipo == false)
+                                       for(int i = 0; i < ctx.asignacion().operacion().size(); i++)
                                        {
-                                           System.out.println("xxxxx3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " +  ctx.asignacion().operacion(i).datos(1).getText() 
-                                                         + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
-                                                         error = true;
+                                           if(ctx.asignacion().operacion(i).datos(0).ID() != null)
+                                           {
+                                               if(sc.resolve(ctx.asignacion().operacion(i).datos(0).ID().toString()) != null) 
+                                               {
+                                                   sc.resolve(ctx.asignacion().operacion(i).datos(0).ID().toString()).setUsed();
+                                                   if(!st.verifType(type, sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())))
+                                                        {
+                                                            System.out.println("2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(0).ID().toString()
+                                                            + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())+ ". Linea " + ctx.getStart().getLine());
+                                                            error = true;
+                                                         }
+                                               }
+                                               else {
+                                                   System.out.println("Error, variable " +ctx.asignacion().operacion(i).datos(0).ID().toString() + " no declarada. Linea " + + ctx.getStart().getLine());
+                                                   error = true;
+                                               }
+                                           }
+                                           else
+                                           {
+                                               if(ctx.asignacion().operacion(i).datos(0).llamada_funcion() == null && ctx.asignacion().operacion(i).datos(0).llamada_funcion_mal() == null)
+                                               {
+                                                    boolean errorTipo = true;
+                                                    String tipoVar = "";
+                                                    if(ctx.asignacion().operacion(i).datos(0).CARACTER() != null)
+                                                        tipoVar = "char";
+                                                    if(ctx.asignacion().operacion(i).datos(0).ENTERO() != null)
+                                                        tipoVar = "int";
+                                                    if(ctx.asignacion().operacion(i).datos(0).FLOTANTE() != null)
+                                                        tipoVar = "double";
+                                                    if(ctx.asignacion().operacion(i).datos(0).TRUEFALSE() != null)
+                                                        tipoVar = "bool";
+                                                    errorTipo = st.verifType(type, tipoVar);
+                                                    if(errorTipo == false)
+                                                    {
+                                                        System.out.println("xxxxx2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().operacion(i).datos(0).getText() 
+                                                                      + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
+                                                                      error = true;
+                                                    }
+                                               }
+                                           }
+
+
+
+                                           if(ctx.asignacion().operacion(i).datos(1) != null && ctx.asignacion().operacion(i).datos(1).ID() != null)
+                                           {
+                                              if(sc.resolve(ctx.asignacion().operacion(i).datos(1).ID().toString()) != null) 
+                                              {
+                                                  sc.resolve(ctx.asignacion().operacion(i).datos(1).ID().toString()).setUsed();
+                                                  if(!st.verifType(type , sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())))
+                                                        {
+                                                            System.out.println("3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(1).ID().toString()
+                                                            + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())+ ". Linea " + ctx.getStart().getLine());
+                                                            error = true;
+                                                         }
+
+                                              } 
+                                              else {
+                                                     System.out.println("Error, variable " +ctx.asignacion().operacion(i).datos(1).ID().toString() + " no declarada. Linea " + ctx.getStart().getLine()  );
+                                                     error = true;
+                                                    }
+                                           }
+                                           else
+                                           {
+                                             if(ctx.asignacion().operacion(i).datos(1) != null && ctx.asignacion().operacion(i).datos(1).llamada_funcion() == null && ctx.asignacion().operacion(i).datos(1).llamada_funcion_mal() == null)
+                                             {
+                                               boolean errorTipo = true;
+                                               String tipoVar = "";
+                                               if( ctx.asignacion().operacion(i).datos(1).CARACTER() != null)
+                                                   tipoVar = "char";
+                                               if( ctx.asignacion().operacion(i).datos(1).ENTERO() != null)
+                                                   tipoVar = "int";
+                                               if( ctx.asignacion().operacion(i).datos(1).FLOTANTE() != null)
+                                                   tipoVar = "double";
+                                               if(ctx.asignacion().operacion(i).datos(1).TRUEFALSE() != null)
+                                                   tipoVar = "bool";
+                                               errorTipo = st.verifType(type, tipoVar);
+                                               if(errorTipo == false)
+                                               {
+                                                   System.out.println("xxxxx3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " +  ctx.asignacion().operacion(i).datos(1).getText() 
+                                                                 + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
+                                                                 error = true;
+                                               }
+                                             }
+                                           }
                                        }
-                                     }
                                    }
-                               }
+                                }
                            }
-                        }
-                   }
-               }
-            }
-               
-             //Codigo de 3 direcciones
-            /*if(ctx.asignacion() != null)
-            {
-                if(ctx.asignacion().datos() == null)
-                {
-                    System.out.println("Codigo 3 direcciones");
-                    System.out.println(ctx.getText());
-                }
-            }*/
+                       }
+                    }
+                 }
+             else
+                 {
+                     String operacion = ctx.variable_operacion().getText();
+                     int cantParentesisA = operacion.length() - operacion.replace("(","").length(),
+                         cantParentesisC = operacion.length() - operacion.replace(")","").length();
+                     
+                     if(cantParentesisA != cantParentesisC )
+                     {
+                         if(cantParentesisA > cantParentesisC)
+                            System.out.println("Error, falta ')'. Linea " + ctx.start.getLine());
+                         else
+                             System.out.println("Error, falta '('. Linea " + ctx.start.getLine());
+                         error = true;
+                     }
+                     else
+                     {
+                         //Codigo3Direcciones
+                         //Ver si se puede hacer aca utilizando las operaciones_matematicas del g4
+                         //Sino funcion hacer funcion en SymbolTable que reciba operacion y divida en operadores matematicos, teniendo en cuenta prioridad 
+                     }
+                 }
+             
+             
          }
         
 
@@ -945,4 +962,26 @@ public class SintacticoBaseListener implements SintacticoListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void visitErrorNode(@NotNull ErrorNode node) { }
+        
+        @Override public void enterOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx) { }
+	@Override public void enterVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) { }
+	@Override public void enterDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { }
 }

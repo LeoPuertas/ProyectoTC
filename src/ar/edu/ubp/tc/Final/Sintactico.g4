@@ -42,8 +42,8 @@ VALOR:(ENTERO|FLOTANTE|CARACTER|CADENA|TRUEFALSE);
 TRUEFALSE: ('true'|'false');
 WS:[ \n\u000D]->skip;
 
-codigo: instrucciones+;
 
+codigo: instrucciones+;
 instrucciones:  declaracion
              ;
 
@@ -93,16 +93,33 @@ datos:  llamada_funcion
      | llamada_funcion_mal
      | ( FLOTANTE
        | CARACTER
-       | ENTERO
-       | TRUEFALSE
-       | ID)
-       ;
+        | ENTERO
+        | TRUEFALSE
+        | ID)
+        ;
 
-operacion : datos OPMATEMATICAS (datos)? ;
+operacion : datos OPMATEMATICAS (datos)? 
+          | datos? OPMATEMATICAS datos
+          ;
+
+datos_opMatematica:( FLOTANTE
+                     | CARACTER
+                     | ENTERO
+                     | ID)                 
+                     ;
+
+variable_operacion : ID ASIGNACION operacion_matematica (OPMATEMATICAS operacion_matematica)?;
+
+operacion_matematica: PARENTESISA* (datos_opMatematica OPMATEMATICAS)+ (datos_opMatematica|operacion_matematica) PARENTESISC* operacion_matematica? PARENTESISC*
+                    |  (datos_opMatematica OPMATEMATICAS)+ (datos_opMatematica|operacion_matematica)
+                    | OPMATEMATICAS (datos_opMatematica|operacion_matematica)
+                    ;
 
 asignacion: ASIGNACION (operacion+|datos); // = 3 | = valor
 
-variable: ID (asignacion)?  ; // a (= 3) | b
+variable: ID (asignacion)?
+        | variable_operacion
+        ; // a (= 3) | b
 
 parametros_funcion: (TIPODEDATO ID?) (COMA TIPODEDATO ID?)*
                     |parametros_funcion_mal

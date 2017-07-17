@@ -1,4 +1,4 @@
-// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\javaapplication5\Sintactico.g4 by ANTLR 4.2.2
+// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\ar\edu\u005Cubp\tc\Final\Sintactico.g4 by ANTLR 4.2.2
 package ar.edu.ubp.tc.Final;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
@@ -75,6 +75,13 @@ public interface SintacticoVisitor<T> extends ParseTreeVisitor<T> {
 	T visitParametros_funcion_decl(@NotNull SintacticoParser.Parametros_funcion_declContext ctx);
 
 	/**
+	 * Visit a parse tree produced by {@link SintacticoParser#operacion_matematica}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx);
+
+	/**
 	 * Visit a parse tree produced by {@link SintacticoParser#faltapuntoycoma}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -101,6 +108,13 @@ public interface SintacticoVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link SintacticoParser#variable_operacion}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link SintacticoParser#si}.
@@ -206,6 +220,13 @@ public interface SintacticoVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFaltaparentesis2(@NotNull SintacticoParser.Faltaparentesis2Context ctx);
+
+	/**
+	 * Visit a parse tree produced by {@link SintacticoParser#datos_opMatematica}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx);
 
 	/**
 	 * Visit a parse tree produced by {@link SintacticoParser#declarar_funcion}.

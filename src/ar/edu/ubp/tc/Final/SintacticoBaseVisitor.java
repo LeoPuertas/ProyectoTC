@@ -1,5 +1,7 @@
-// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\javaapplication5\Sintactico.g4 by ANTLR 4.2.2
+// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\ar\edu\u005Cubp\tc\Final\Sintactico.g4 by ANTLR 4.2.2
 package ar.edu.ubp.tc.Final;
+
+import ar.edu.ubp.tc.tabla.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -90,6 +92,14 @@ public class SintacticoBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitOperacion_matematica(@NotNull SintacticoParser.Operacion_matematicaContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitFaltapuntoycoma(@NotNull SintacticoParser.FaltapuntoycomaContext ctx) { return visitChildren(ctx); }
 
 	/**
@@ -115,6 +125,14 @@ public class SintacticoBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}
@@ -235,6 +253,14 @@ public class SintacticoBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitFaltaparentesis2(@NotNull SintacticoParser.Faltaparentesis2Context ctx) { return visitChildren(ctx); }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { return visitChildren(ctx); }
 
 	/**
 	 * {@inheritDoc}

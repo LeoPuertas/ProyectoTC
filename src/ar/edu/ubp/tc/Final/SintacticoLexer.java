@@ -1,4 +1,4 @@
-// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\javaapplication5\Sintactico.g4 by ANTLR 4.2.2
+// Generated from C:\Users\PC\Desktop\PEF\JavaApplication5\src\ar\edu\u005Cubp\tc\Final\Sintactico.g4 by ANTLR 4.2.2
 package ar.edu.ubp.tc.Final;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
