@@ -49,6 +49,11 @@ public class Scope {
         return null; // not found
     }
     
+    public String getType(String name)
+    {
+        return resolve(name) != null ? resolve(name).type : "";
+    }
+    
     public Map getMap()
     {
         return symbolMap;
@@ -72,7 +77,7 @@ public class Scope {
         for(String x : symbolMap.keySet()){
                 cadena +=  resolve(x).toString();
         }
-        return "Scope " + type + ": " + cadena + "\n";
+        return "Contexto " + genId + ": "  + type + ": \n" + cadena + "";
     }
     
 }

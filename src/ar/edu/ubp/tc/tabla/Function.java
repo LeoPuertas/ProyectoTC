@@ -24,6 +24,8 @@ public class Function {
         this.name = name;
         this.type = type;
         this.declared = true;
+        this.defined = false;
+        this.used = false;
         int cant = parametros.contains(",") ?parametros.split(",").length : 0; 
         for(int i = 0; i < cant ;i++)
         {
@@ -34,9 +36,13 @@ public class Function {
     public Function(String name, String type){
         this.name = name;
         this.type = type;
+        this.used = false;
         this.declared = true;
         this.arguments = null;
         
+    }
+    public Boolean getUsed(){
+        return this.used;
     }
     
     public void setUsed(){

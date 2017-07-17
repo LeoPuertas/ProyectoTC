@@ -12,10 +12,11 @@ public class SymbolTable {
     protected Stack<Scope> scopeStack;
     protected ArrayList<Scope> allScopes;
     protected ArrayList<Function> allFunction;
+    protected ArrayList<String> allVar;
     protected int genId;
 
     public SymbolTable() {
-        System.out.println("--------Tabla de symbolos--------");
+        System.out.println("--------ERRORES--------");
         init();
     }
 
@@ -23,6 +24,7 @@ public class SymbolTable {
         scopeStack = new Stack<>();
         allScopes = new ArrayList<>();
         allFunction = new ArrayList<>();
+        allVar = new ArrayList<>();
         genId = 0;
 
         Scope globals = new Scope(ScopeType.GLOBAL, nextGenId(), null);
@@ -39,8 +41,11 @@ public class SymbolTable {
         {
           if(a.getName().equals(name))
           { 
-            a.setUsed();
-            return true;
+            if(a.defined == true)
+            {
+                a.setUsed();
+                return true;
+            }
           }
         }
         return false;
@@ -68,6 +73,9 @@ public class SymbolTable {
         return scope;
     }
 
+    public void addVar(String var){
+        allVar.add(var);
+    }
     public void popScope() {
         //if(scopeStack.size() > 0)
             scopeStack.pop();
@@ -97,7 +105,12 @@ public class SymbolTable {
     
     public String imprimir(){
         StringBuilder sb = new StringBuilder();
-        sb.append("\n");
+        sb.append("\n---------------FUNCIONES--------------\n");
+        for(Function a : allFunction)
+        {
+            sb.append(a.toString());
+        }
+        sb.append("\n---------------CONTEXTOS--------------\n");
         for(int i = 0; i < allScopes.size(); i++){
             Scope aux = allScopes.get(i);
             while(aux != null)
@@ -105,7 +118,7 @@ public class SymbolTable {
                 sb.append(aux.toString());
                 aux = aux.enclosingScope();
             }
-            sb.append("\n\n");
+            sb.append("--------------------------------------\n");
         }
         return sb.toString();
     }
@@ -125,23 +138,47 @@ public class SymbolTable {
         return sb.toString();
     }
     
-    public String varNotUsed()
+    
+    public Boolean verifType(String tipo1, String tipo2)
+    {
+        if(!tipo1.equals(tipo2))
+        {
+            if(tipo1.equals("int") || tipo1.equals("double"))
+            {
+              if(tipo2.equals("int") || tipo2.equals("double"))
+                  return true;
+              else
+                  return false;
+            }
+            else
+                return false;
+        }
+        else 
+            return true;
+    }
+    
+    public String notUsed()
     {
         StringBuilder sb = new StringBuilder();
-        for(Scope sc : allScopes)
-        {
-         for(int i = 0; i< sc.getMap().size(); i++)
-         {
-            ArrayList<String> keys = new ArrayList<>(sc.getMap().keySet());
-            for(String name : keys)
-            {
-                if(sc.resolve(name) != null && sc.resolve(name).getUsed() == false)  
-                    sb.append("Advertencia, variable " + name + " no usada. \n"); 
-            }
         
-            
+        for(Function f : allFunction)
+        {
+            if(!f.getUsed() && !f.getName().equals("main"))
+            {
+                sb.append("Advertencia, funcion " + f.getName() + " no usada.\n");
+            }
         }
-        }
+        for(String s : allVar)
+        {
+         String id = s.split(";")[0];
+         int idScope = Integer.parseInt(s.split(";")[1]);
+                if(allScopes.get(idScope-1).resolve(id) != null && allScopes.get(idScope-1).resolve(id).getUsed() == false)  
+                {
+                    sb.append("Advertencia, variable " + id + " Scope " + idScope + " no usada. \n");
+                }
+         }
         return sb.toString();
+        
     }
+
 }
