@@ -42,6 +42,7 @@ VALOR:(ENTERO|FLOTANTE|CARACTER|CADENA|TRUEFALSE);
 TRUEFALSE: ('true'|'false');
 WS:[ \n\u000D]->skip;
 
+lista_variables_op: (variable_operacion PUNTOYCOMA)*;
 
 codigo: instrucciones+;
 instrucciones:  declaracion
@@ -115,11 +116,11 @@ operacion_matematica: PARENTESISA* (datos_opMatematica OPMATEMATICAS)+ (datos_op
                     | OPMATEMATICAS (datos_opMatematica|operacion_matematica)
                     ;
 
-asignacion: ASIGNACION (operacion+|datos); // = 3 | = valor
+asignacion: ASIGNACION (operacion+|datos); 
 
 variable: ID (asignacion)?
         | variable_operacion
-        ; // a (= 3) | b
+        ;
 
 parametros_funcion: (TIPODEDATO ID?) (COMA TIPODEDATO ID?)*
                     |parametros_funcion_mal
@@ -135,7 +136,7 @@ declarar_funcion: TIPODEDATO ID PARENTESISA (parametros_funcion)? PARENTESISC;
 
 declarar_variable_mal: TIPODEDATO variable (COMA variable)* variable (COMA variable)* ;
 
-declarar_variable_mal_tipo: TIPO_INT ID (ASIGNACION (FLOTANTE|CARACTER|TRUEFALSE))//? (COMA ID ASIGNACION (FLOTANTE|CARACTER|TRUEFALSE))?
+declarar_variable_mal_tipo: TIPO_INT ID (ASIGNACION (FLOTANTE|CARACTER|TRUEFALSE))
                           | TIPO_CHAR ID (ASIGNACION (FLOTANTE|ENTERO|TRUEFALSE))? (COMA ID ASIGNACION (FLOTANTE|ENTERO|TRUEFALSE))?
                           | (TIPO_DOUBLE|TIPO_FLOAT) ID (ASIGNACION (ENTERO|CARACTER|TRUEFALSE))? (COMA ID ASIGNACION (ENTERO|CARACTER|TRUEFALSE))?
                           | TIPO_BOOL ID (ASIGNACION (FLOTANTE|CARACTER|ENTERO))? (COMA ID ASIGNACION (FLOTANTE|CARACTER|ENTERO))?
@@ -156,7 +157,7 @@ llamada_funcion_mal: ID (ID (COMA ID)*)? PARENTESISC
                    ;
 
 bloque: LLAVEA instruccion* (returno)? LLAVEC ;
-bloque_mal: LLAVEA instruccion* (returno)? instruccion*; //Agregar * luego de instruccion
+bloque_mal: LLAVEA instruccion* (returno)? instruccion*; 
 
 returno: RETURNO datos PUNTOYCOMA
        | returno_mal

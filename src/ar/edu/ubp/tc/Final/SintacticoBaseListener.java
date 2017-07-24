@@ -2,16 +2,12 @@
 package ar.edu.ubp.tc.Final;
 
 import ar.edu.ubp.tc.tabla.*;
+import java.util.LinkedList;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-/**
- * This class provides an empty implementation of {@link SintacticoListener},
- * which can be extended to create a listener which only needs to handle a subset
- * of the available methods.
- */
 public class SintacticoBaseListener implements SintacticoListener {
     
         SymbolTable st ;
@@ -19,136 +15,47 @@ public class SintacticoBaseListener implements SintacticoListener {
          int en_funcion = 0;
          int en_bloque = 0;
          int declarando = 0;
+         int decl_parametros = 0;
          boolean error = false;
     
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterInstrucciones(@NotNull SintacticoParser.InstruccionesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitInstrucciones(@NotNull SintacticoParser.InstruccionesContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParametros_funcion_mal(@NotNull SintacticoParser.Parametros_funcion_malContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitParametros_funcion_mal(@NotNull SintacticoParser.Parametros_funcion_malContext ctx) { 
             System.out.println("Error, parametros funcion. Linea : " + ctx.getStart().getLine());
             error = true;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterAsignacion(@NotNull SintacticoParser.AsignacionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitAsignacion(@NotNull SintacticoParser.AsignacionContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDeclarar_variable_mal_tipo(@NotNull SintacticoParser.Declarar_variable_mal_tipoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitDeclarar_variable_mal_tipo(@NotNull SintacticoParser.Declarar_variable_mal_tipoContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDeclarar_variable_mal(@NotNull SintacticoParser.Declarar_variable_malContext ctx) { 
             declarando = 1;
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitDeclarar_variable_mal(@NotNull SintacticoParser.Declarar_variable_malContext ctx) {
             
             System.out.println("Error, falta ','. Linea: " + ctx.getStart().getLine());
             error = true;
             declarando = 0;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterReturno(@NotNull SintacticoParser.ReturnoContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitReturno(@NotNull SintacticoParser.ReturnoContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+	@Override public void exitReturno(@NotNull SintacticoParser.ReturnoContext ctx) { 
+        
+            if(ctx.datos().ID() != null)
+            {
+                Scope sc = st.currentScope();
+                if(sc.resolve(ctx.datos().ID().toString()) != null) 
+                    sc.resolve(ctx.datos().ID().toString()).setUsed() ;
+            }
+        }
+        
 	@Override public void enterOperacion(@NotNull SintacticoParser.OperacionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitOperacion(@NotNull SintacticoParser.OperacionContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterInstruccion(@NotNull SintacticoParser.InstruccionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitInstruccion(@NotNull SintacticoParser.InstruccionContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-        int decl_parametros = 0;
 	@Override public void enterParametros_funcion_decl(@NotNull SintacticoParser.Parametros_funcion_declContext ctx) { 
             decl_parametros = 1;
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitParametros_funcion_decl(@NotNull SintacticoParser.Parametros_funcion_declContext ctx) {
                     Scope sc ;
                     Symbol s;
@@ -181,165 +88,48 @@ public class SintacticoBaseListener implements SintacticoListener {
                     
                     decl_parametros = 0;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFaltapuntoycoma(@NotNull SintacticoParser.FaltapuntoycomaContext ctx) {
-        }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+        @Override public void enterFaltapuntoycoma(@NotNull SintacticoParser.FaltapuntoycomaContext ctx) { }
 	@Override public void exitFaltapuntoycoma(@NotNull SintacticoParser.FaltapuntoycomaContext ctx) { 
             System.out.println("Error, falta ';'.Linea: " + ctx.getStart().getLine());
             error = true;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDatos(@NotNull SintacticoParser.DatosContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitDatos(@NotNull SintacticoParser.DatosContext ctx) {
-            if(declarando == 0  && ctx.ID() != null){
-               
-                if(st.currentScope().resolve(ctx.ID().toString()) != null)
-                {
-                  
-                }
-                else
+            if(declarando == 0  && ctx.ID() != null)
+            {   
+                if(st.currentScope().resolve(ctx.ID().toString()) == null)
                 {
                     System.out.println("Error, variable " + ctx.ID().toString() + " no declarada. Linea " + ctx.getStart().getLine());
                     error = true;
                 }
             }
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPara(@NotNull SintacticoParser.ParaContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitPara(@NotNull SintacticoParser.ParaContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+        @Override public void enterFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx) { }
 	@Override public void exitFaltaparentesis(@NotNull SintacticoParser.FaltaparentesisContext ctx) {
             System.out.println("Error, falta " + (ctx.PARENTESISA() != null ? ")" : "(") + ". Linea " + ctx.getStart().getLine());
             error = true;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSi(@NotNull SintacticoParser.SiContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+        @Override public void enterSi(@NotNull SintacticoParser.SiContext ctx) { }
 	@Override public void exitSi(@NotNull SintacticoParser.SiContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSi_entonces(@NotNull SintacticoParser.Si_entoncesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+        @Override public void enterSi_entonces(@NotNull SintacticoParser.Si_entoncesContext ctx) { }
 	@Override public void exitSi_entonces(@NotNull SintacticoParser.Si_entoncesContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterReturno_mal(@NotNull SintacticoParser.Returno_malContext ctx) { 
-            
-        }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+        @Override public void enterReturno_mal(@NotNull SintacticoParser.Returno_malContext ctx) {}
 	@Override public void exitReturno_mal(@NotNull SintacticoParser.Returno_malContext ctx) { 
             System.out.println("Error, falta " + (ctx.datos() != null ? "dato a retornar " : "';' ") + ". Linea " + ctx.getStart().getLine());
             error = true;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterMientras(@NotNull SintacticoParser.MientrasContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitMientras(@NotNull SintacticoParser.MientrasContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFaltapuntoycoma2(@NotNull SintacticoParser.Faltapuntoycoma2Context ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
+    @Override public void enterFaltapuntoycoma2(@NotNull SintacticoParser.Faltapuntoycoma2Context ctx) { }
 	@Override public void exitFaltapuntoycoma2(@NotNull SintacticoParser.Faltapuntoycoma2Context ctx) { 
             System.out.println("Error, falta ';'. Linea: " + ctx.getStart().getLine());
             error = true;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFuncion(@NotNull SintacticoParser.FuncionContext ctx) {
+        @Override public void enterFuncion(@NotNull SintacticoParser.FuncionContext ctx) {
             en_funcion = 1;
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitFuncion(@NotNull SintacticoParser.FuncionContext ctx) {         
             Function func;
             if(!st.setDefined(ctx.ID().toString()) && !ctx.ID().toString().equals("main"))
@@ -354,40 +144,11 @@ public class SintacticoBaseListener implements SintacticoListener {
                     st.AddFunction(main);
                     st.setDefined(ctx.ID().toString());
                 }
-            
-           /* if(ctx.parametros_funcion_decl() != null)
-            { 
-                func = new Function(ctx.ID().toString(), ctx.TIPODEDATO().toString(),ctx.parametros_funcion_decl().toString());
-            }
-            else
-            {
-                func = new Function(ctx.ID().toString(),ctx.TIPODEDATO().toString());
-            }
-            
-            st.AddFunction(func);        
-           */
            en_funcion = 0;
-           //st.popScope();
         }
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterParametros_funcion(@NotNull SintacticoParser.Parametros_funcionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitParametros_funcion(@NotNull SintacticoParser.Parametros_funcionContext ctx) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterBloque(@NotNull SintacticoParser.BloqueContext ctx) { 
             en_bloque = 1;
             if(decl_funcion == 0){
@@ -397,31 +158,13 @@ public class SintacticoBaseListener implements SintacticoListener {
                 decl_funcion = 0;
             }
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBloque(@NotNull SintacticoParser.BloqueContext ctx) {
-            
-            
+	@Override public void exitBloque(@NotNull SintacticoParser.BloqueContext ctx) {            
             en_bloque = 0;
             st.popScope();
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterDeclarar_variables(@NotNull SintacticoParser.Declarar_variablesContext ctx) {
-        declarando = 1; 
+            declarando = 1; 
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitDeclarar_variables(@NotNull SintacticoParser.Declarar_variablesContext ctx) {
             int cant = 0; String type = ctx.TIPODEDATO().getText(); boolean errorTipo = true;
             Scope sc;
@@ -446,7 +189,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                            {
                                    if(!st.verifType(type, sc.getType(v.asignacion().datos().ID().toString())))
                                    {
-                                       System.out.println("1Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().datos().ID().toString()
+                                       System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().datos().ID().toString()
                                        + " es tipo " + sc.getType(v.asignacion().datos().ID().toString()) + ". Linea " + ctx.getStart().getLine());
                                        error = true;
                                    }
@@ -469,7 +212,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                   errorTipo = st.verifType(type, tipoVar);
                                   if(errorTipo == false)
                                   {
-                                      System.out.println("xxxxxx4Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " + v.asignacion().datos().getText() 
+                                      System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " + v.asignacion().datos().getText() 
                                                     + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                     error = true;
                                   }
@@ -483,7 +226,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                    {
                                            if(!st.verifType(type, sc.getType(v.asignacion().operacion(i).datos(0).ID().toString())))
                                                 {
-                                                    System.out.println("xxxxx5Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().operacion(i).datos(0).ID().toString()
+                                                    System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().operacion(i).datos(0).ID().toString()
                                                     + " es tipo " + sc.getType(v.asignacion().operacion(i).datos(0).ID().toString())+ ". Linea " + ctx.getStart().getLine());
                                                     error = true;
                                                  }
@@ -505,7 +248,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                             errorTipo = st.verifType(type, tipoVar);
                                             if(errorTipo == false)
                                             {
-                                                System.out.println("xxxxxx6Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " + v.asignacion().operacion(i).datos(0).getText() 
+                                                System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " + v.asignacion().operacion(i).datos(0).getText() 
                                                               + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                               error = true;
                                             }
@@ -518,7 +261,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                    {
                                       if(!st.verifType(type , sc.getType(v.asignacion().operacion(i).datos(1).ID().toString())))
                                                 {
-                                                    System.out.println("3Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().operacion(i).datos(1).ID().toString()
+                                                    System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y la variable " + v.asignacion().operacion(i).datos(1).ID().toString()
                                                     + " es tipo " + sc.getType(v.asignacion().operacion(i).datos(1).ID().toString())+ ". Linea " + ctx.getStart().getLine());
                                                     error = true;
                                                 }
@@ -540,7 +283,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                        errorTipo = st.verifType(type, tipoVar);
                                        if(errorTipo == false)
                                        {
-                                           System.out.println("xxxx7Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " +  v.asignacion().operacion(i).datos(1).getText() 
+                                           System.out.println("Error, tipos de datos incompatibles,  la variable " + v.ID().toString() +" es tipo " + type + " y " +  v.asignacion().operacion(i).datos(1).getText() 
                                                          + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                          error = true;
                                        }
@@ -566,20 +309,9 @@ public class SintacticoBaseListener implements SintacticoListener {
             }
             declarando = 0;
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCodigo(@NotNull SintacticoParser.CodigoContext ctx) { 
+        @Override public void enterCodigo(@NotNull SintacticoParser.CodigoContext ctx) { 
             st = new SymbolTable();
         }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void exitCodigo(@NotNull SintacticoParser.CodigoContext ctx) { 
            if(!error)
            {
@@ -592,13 +324,7 @@ public class SintacticoBaseListener implements SintacticoListener {
 
            
         }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSino(@NotNull SintacticoParser.SinoContext ctx) { }
+        @Override public void enterSino(@NotNull SintacticoParser.SinoContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -751,7 +477,7 @@ public class SintacticoBaseListener implements SintacticoListener {
            
              if(ctx.variable_operacion() == null)
                {
-                     Scope sc;
+                    Scope sc;
                     Symbol s;
                     String type;
                     if(declarando == 0)
@@ -785,7 +511,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                            sc.resolve(ctx.asignacion().datos().ID().toString()).setUsed() ;
                                            if(!st.verifType(type, sc.getType(ctx.asignacion().datos().ID().toString())))
                                            {
-                                               System.out.println("1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().datos().ID().toString()
+                                               System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().datos().ID().toString()
                                                + " es tipo " + sc.getType(ctx.asignacion().datos().ID().toString()) + ". Linea " + ctx.getStart().getLine());
                                                error = true;
                                            }
@@ -808,7 +534,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                           errorTipo = st.verifType(type, tipoVar);
                                           if(errorTipo == false)
                                           {
-                                              System.out.println("xxxxx1Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().datos().getText() 
+                                              System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().datos().getText() 
                                                             + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                             error = true;
                                           }
@@ -825,7 +551,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                                    sc.resolve(ctx.asignacion().operacion(i).datos(0).ID().toString()).setUsed();
                                                    if(!st.verifType(type, sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())))
                                                         {
-                                                            System.out.println("2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(0).ID().toString()
+                                                            System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(0).ID().toString()
                                                             + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(0).ID().toString())+ ". Linea " + ctx.getStart().getLine());
                                                             error = true;
                                                          }
@@ -852,7 +578,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                                     errorTipo = st.verifType(type, tipoVar);
                                                     if(errorTipo == false)
                                                     {
-                                                        System.out.println("xxxxx2Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().operacion(i).datos(0).getText() 
+                                                        System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " + ctx.asignacion().operacion(i).datos(0).getText() 
                                                                       + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                                       error = true;
                                                     }
@@ -868,7 +594,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                                   sc.resolve(ctx.asignacion().operacion(i).datos(1).ID().toString()).setUsed();
                                                   if(!st.verifType(type , sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())))
                                                         {
-                                                            System.out.println("3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(1).ID().toString()
+                                                            System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y la variable " + ctx.asignacion().operacion(i).datos(1).ID().toString()
                                                             + " es tipo " + sc.getType(ctx.asignacion().operacion(i).datos(1).ID().toString())+ ". Linea " + ctx.getStart().getLine());
                                                             error = true;
                                                          }
@@ -896,7 +622,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                                errorTipo = st.verifType(type, tipoVar);
                                                if(errorTipo == false)
                                                {
-                                                   System.out.println("xxxxx3Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " +  ctx.asignacion().operacion(i).datos(1).getText() 
+                                                   System.out.println("Error, tipos de datos incompatibles,  la variable " + ctx.ID().toString() +" es tipo " + type + " y " +  ctx.asignacion().operacion(i).datos(1).getText() 
                                                                  + " es tipo " + tipoVar + ". Linea " + ctx.getStart().getLine());
                                                                  error = true;
                                                }
@@ -908,6 +634,38 @@ public class SintacticoBaseListener implements SintacticoListener {
                            }
                        }
                     }
+                    
+                    //Cod3 sin parentesis
+                    String codigo = ctx.getText();
+                    String codTresDirecciones = "";
+                    
+                    
+                    int t = 0;
+                    int pos;
+                   String[] v = codigo.split("(?=[-+*/])");
+                    if(codigo.contains("*"))
+                    {
+                        if(codigo.length() - codigo.replace("*", "").length() > 1)
+                        {
+                            int cant = codigo.length() - codigo.replace("*", "").length();
+                            for(int i = 0; i < cant ; i++)
+                            {
+                                t++;
+                            }
+                        }
+                        else
+                        {
+                            pos = codigo.indexOf("*");
+                            codTresDirecciones = "t" + t + " = " + v[pos-1] + "*" + v[pos+1];
+                            System.out.println(codTresDirecciones);
+                            t++;
+                        }
+                    }
+                    
+                    
+                    
+                    
+                    
                  }
              else
                  {
@@ -925,7 +683,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                      }
                      else
                      {
-                         //Codigo3Direcciones
+                                                 //Codigo3Direcciones
                          //Ver si se puede hacer aca utilizando las operaciones_matematicas del g4
                          //Sino funcion hacer funcion en SymbolTable que reciba operacion y divida en operadores matematicos, teniendo en cuenta prioridad 
                      }
@@ -976,7 +734,38 @@ public class SintacticoBaseListener implements SintacticoListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) { }
+	@Override public void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) {
+        
+            
+            String operacion3Direcciones = ctx.getText();
+            String codTresDireciones = ctx.ID().toString() + ctx.ASIGNACION().toString();
+            //Verificar parentesis
+            if(operacion3Direcciones.contains("("))
+            {
+                int cantParentesisA = operacion3Direcciones.length() - operacion3Direcciones.replace("(","").length(),
+                         cantParentesisC = operacion3Direcciones.length() - operacion3Direcciones.replace(")","").length();
+                          
+                if(cantParentesisA != cantParentesisC )
+                     {
+                         if(cantParentesisA > cantParentesisC)
+                            System.out.println("Error, falta ')'. Linea " + ctx.start.getLine());
+                         else
+                             System.out.println("Error, falta '('. Linea " + ctx.start.getLine());
+                         error = true;
+                     }
+                else
+                {
+                    
+                }
+                
+            }
+            else
+            {
+               
+            }
+                         
+ 
+        }
 	@Override public void enterDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { }
 	/**
 	 * {@inheritDoc}
