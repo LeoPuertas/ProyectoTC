@@ -2,6 +2,9 @@
 package ar.edu.ubp.tc.Final;
 
 import ar.edu.ubp.tc.tabla.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -319,8 +322,18 @@ public class SintacticoBaseListener implements SintacticoListener {
                 System.out.println(st.imprimir());
                 System.out.println("\n\n----------NO USADAS----------");
                 System.out.println(st.notUsed());
+           }     
+                try {
+                BufferedWriter out = new BufferedWriter(new FileWriter("3Direcciones" + hashCode() + ".txt"));
+                out.write(aux);
+                out.close();
+                }
+                catch (IOException e)
+                {
+                    System.out.println("Error al grabar el codigo de 3 direcciones. ");       
+                }            
                 
-           }
+           
 
            
         }
@@ -734,9 +747,9 @@ public class SintacticoBaseListener implements SintacticoListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+        String aux = "";
 	@Override public void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) {
-        
-            
+            aux += "\n" + ctx.getText() + "\n" ;
             String operacion3Direcciones = ctx.getText();
             String codTresDireciones = ctx.ID().toString() + ctx.ASIGNACION().toString();
             //Verificar parentesis
@@ -763,7 +776,75 @@ public class SintacticoBaseListener implements SintacticoListener {
             {
                
             }
-                         
+            
+            int x = 1;
+            for(int i = 0; i < ctx.operacion_matematica().size(); i ++)
+            {
+               // if(ctx.operacion_matematica(i).operacion_matematica() != null)
+               // {
+                
+                    
+                    if(ctx.operacion_matematica(i).datos_opMatematica().size() > 2)
+                    {
+                        for( int j = 0; j < ctx.operacion_matematica(i).datos_opMatematica().size() ; j = j+2)
+                        {
+                           
+                            String aux2 = "t" + x + " = " + ctx.operacion_matematica(i).datos_opMatematica(j).getText() + " " + ctx.operacion_matematica(i).OPMATEMATICAS(j/2).getText() + " " ;
+                            
+                            if(ctx.operacion_matematica(i).datos_opMatematica(j + 1) != null) 
+                                aux2 += ctx.operacion_matematica(i).datos_opMatematica(j + 1).getText();
+                                               
+                            if(j > 0)
+                            {
+                                aux2 = "t" + x + " = " + " t" + (x-1) + " " + ctx.operacion_matematica(i).OPMATEMATICAS(j/2).getText() + " " + ctx.operacion_matematica(i).datos_opMatematica(j).getText();
+                                System.out.println(aux2);
+                            }
+                            aux +=  "\n" + aux2 + "\n";
+                            x++;
+                        }
+                    }
+                    if(ctx.operacion_matematica(i).datos_opMatematica().size() == 2)
+                    {
+                        String aux2 = "t" + x + " = " + ctx.operacion_matematica(i).datos_opMatematica(0).getText() + " " + ctx.operacion_matematica(i).OPMATEMATICAS(0).getText() + " " + ctx.operacion_matematica(i).datos_opMatematica(1).getText();
+                        aux += "\n" + aux2 + "\n";
+                        x++;
+                    }
+                    
+             //   } 
+               
+                   if(ctx.operacion_matematica(i).operacion_matematica() != null)
+                    if(ctx.operacion_matematica(i).operacion_matematica().size() > 0)
+                    {
+                        
+                        for(int z = 0; z <ctx.operacion_matematica(i).operacion_matematica().size(); z++ )
+                        {
+                            aux += "\n" + "t" + x + " = t" + (x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(0).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(0).getText() + "\n";
+                            x++;
+                            
+                        }
+  
+                        
+                       
+                    }
+                    
+            }
+            int cantOperaciones = ctx.operacion_matematica(0).OPMATEMATICAS().size();
+            if( cantOperaciones == 1)
+            {
+                if(x >= 2)
+                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.OPMATEMATICAS().getText() + " t" + (x-1);
+                else
+                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1) ;
+            }
+            else
+            {
+                if(x >= 2)
+                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.operacion_matematica(0).OPMATEMATICAS(cantOperaciones - 1).getText() + " t" + (x-1);
+                else
+                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1) ;
+            }
+            
+           aux+= "\n------------------------"; 
  
         }
 	@Override public void enterDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { }
