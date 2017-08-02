@@ -648,58 +648,12 @@ public class SintacticoBaseListener implements SintacticoListener {
                        }
                     }
                     
-                    //Cod3 sin parentesis
-                    String codigo = ctx.getText();
-                    String codTresDirecciones = "";
-                    
-                    
-                    int t = 0;
-                    int pos;
-                   String[] v = codigo.split("(?=[-+*/])");
-                    if(codigo.contains("*"))
-                    {
-                        if(codigo.length() - codigo.replace("*", "").length() > 1)
-                        {
-                            int cant = codigo.length() - codigo.replace("*", "").length();
-                            for(int i = 0; i < cant ; i++)
-                            {
-                                t++;
-                            }
-                        }
-                        else
-                        {
-                            pos = codigo.indexOf("*");
-                            codTresDirecciones = "t" + t + " = " + v[pos-1] + "*" + v[pos+1];
-                            System.out.println(codTresDirecciones);
-                            t++;
-                        }
-                    }
+                  
                     
                     
                     
                     
                     
-                 }
-             else
-                 {
-                     String operacion = ctx.variable_operacion().getText();
-                     int cantParentesisA = operacion.length() - operacion.replace("(","").length(),
-                         cantParentesisC = operacion.length() - operacion.replace(")","").length();
-                     
-                     if(cantParentesisA != cantParentesisC )
-                     {
-                         if(cantParentesisA > cantParentesisC)
-                            System.out.println("Error, falta ')'. Linea " + ctx.start.getLine());
-                         else
-                             System.out.println("Error, falta '('. Linea " + ctx.start.getLine());
-                         error = true;
-                     }
-                     else
-                     {
-                                                 //Codigo3Direcciones
-                         //Ver si se puede hacer aca utilizando las operaciones_matematicas del g4
-                         //Sino funcion hacer funcion en SymbolTable que reciba operacion y divida en operadores matematicos, teniendo en cuenta prioridad 
-                     }
                  }
              
              
@@ -750,6 +704,7 @@ public class SintacticoBaseListener implements SintacticoListener {
         String aux = "";
 	@Override public void exitVariable_operacion(@NotNull SintacticoParser.Variable_operacionContext ctx) {
             aux += "\n" + ctx.getText() + "\n" ;
+            String variable = "" ;
             String operacion3Direcciones = ctx.getText();
             String codTresDireciones = ctx.ID().toString() + ctx.ASIGNACION().toString();
             //Verificar parentesis
@@ -772,19 +727,12 @@ public class SintacticoBaseListener implements SintacticoListener {
                 }
                 
             }
-            else
-            {
-               
-            }
+           
             
             int x = 1;
             for(int i = 0; i < ctx.operacion_matematica().size(); i ++)
             {
-               // if(ctx.operacion_matematica(i).operacion_matematica() != null)
-               // {
-                
-                    
-                    if(ctx.operacion_matematica(i).datos_opMatematica().size() > 2)
+               if(ctx.operacion_matematica(i).datos_opMatematica().size() > 2)
                     {
                         for( int j = 0; j < ctx.operacion_matematica(i).datos_opMatematica().size() ; j = j+2)
                         {
@@ -797,17 +745,25 @@ public class SintacticoBaseListener implements SintacticoListener {
                             if(j > 0)
                             {
                                 aux2 = "t" + x + " = " + " t" + (x-1) + " " + ctx.operacion_matematica(i).OPMATEMATICAS(j/2).getText() + " " + ctx.operacion_matematica(i).datos_opMatematica(j).getText();
-                                System.out.println(aux2);
                             }
                             aux +=  "\n" + aux2 + "\n";
                             x++;
                         }
                     }
+      
                     if(ctx.operacion_matematica(i).datos_opMatematica().size() == 2)
                     {
+                        
                         String aux2 = "t" + x + " = " + ctx.operacion_matematica(i).datos_opMatematica(0).getText() + " " + ctx.operacion_matematica(i).OPMATEMATICAS(0).getText() + " " + ctx.operacion_matematica(i).datos_opMatematica(1).getText();
                         aux += "\n" + aux2 + "\n";
                         x++;
+                    }
+                   
+                    if(ctx.operacion_matematica(i).datos_opMatematica().size() == 1 && i == 0)
+                    {
+                       //String aux2 = "t" + x + " = " + ctx.operacion_matematica(i).datos_opMatematica(0).getText() ;//+ " " + ctx.operacion_matematica(i).OPMATEMATICAS(0).getText() + " " + ctx.operacion_matematica(i).datos_opMatematica(1).getText();
+                        variable = ctx.operacion_matematica(i).datos_opMatematica(0).getText();
+                        
                     }
                     
              //   } 
@@ -817,22 +773,104 @@ public class SintacticoBaseListener implements SintacticoListener {
                     {
                         
                         for(int z = 0; z <ctx.operacion_matematica(i).operacion_matematica().size(); z++ )
-                        {
-                            aux += "\n" + "t" + x + " = t" + (x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(0).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(0).getText() + "\n";
-                            x++;
+                        {   for(int y = 0; y <= ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size() ; y = y + 2)
+                            {
+                                
+                                if(variable == "")
+                                   aux += "\n" + "t" + x + " = t" + (x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(0).getText() + " " 
+                                           + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(0).getText() + "\n";
+                                else
+                                {
+                                    if(ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y+1) != null)
+                                    {//aux += "\n" + "t" + x + " = " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y+1).getText() + "\n";
+                                         if(y > 0) 
+                                         { System.out.println("y > 0" + y + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size()); 
+                                            aux += "\n" + "t" + x + " = " + "t" +(x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() + " " 
+                                                    + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText() + "\n";
+                                         }
+                                         else
+                                         {
+                                           System.out.println("else" + y);    
+                                           aux += "\n" + "t" + x + " = " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() 
+                                                   + " " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y+1).getText() + "\n";
+                                         }
+                                    }
+                                    else
+                                    {
+                                        System.out.println("else2" + y);
+                                        if(ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size() != 2)
+                                        {
+                                            if(ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size() % 2 == 0)
+                                             {
+                                                    aux += "\n" + "t" + (x) + " = t" + (x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() + " " 
+                                                         + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y-1).getText()+ "\n";
+                                             }
+                                            else
+                                            {
+                                                aux += "\n" + "t" + (x) + " = t" + (x-1) + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() + " " 
+                                                        + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText()+ "\n"; 
+                                            }
+                                        }
+                                        System.out.println("aa");
+                                    }
+                                }
+                                x++;
+                            }
+                        
                             
                         }
   
-                        
-                       
                     }
                     
             }
             int cantOperaciones = ctx.operacion_matematica(0).OPMATEMATICAS().size();
+            //System.out.println("x " + x + " cant " + cantOperaciones+ " " + ctx.operacion_matematica().size());
             if( cantOperaciones == 1)
             {
-                if(x >= 2)
-                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.OPMATEMATICAS().getText() + " t" + (x-1);
+               if(variable != "")
+               {
+                   if(x > 2)
+                   {
+                      aux += "\nt" + (x) + " = " + variable + " " + ctx.operacion_matematica(0).OPMATEMATICAS(0).getText() + " t" + (x-1) + "\n"; 
+                      aux += "\nx = t" + (x) + "\n"; 
+                   }
+                   else 
+                   if (x == 2)
+                   {
+                        aux += "\nt" + (x) + " = " + variable + " " + ctx.operacion_matematica(0).OPMATEMATICAS(0).getText() + " t" + (x-1) + "\n"; 
+                        aux += "\nx = t" + x + "\n"; 
+                   }
+               }
+               else
+               {
+                  if(ctx.operacion_matematica().size() > 1)
+                  {
+                      aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.operacion_matematica(0).OPMATEMATICAS(cantOperaciones-1).getText() + " t" + (x-1);
+                  }
+                   if(ctx.operacion_matematica().size() == 1)
+                   {
+                       aux += "\n" + ctx.ID().getText() + " = "+ " t" + (x-1);
+                   }
+               }
+              
+              /*
+                
+               
+                else
+                    if(x > 2 && ctx.operacion_matematica().size() > 1)
+                    { aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.operacion_matematica(0).OPMATEMATICAS(cantOperaciones-1).getText() + " t" + (x-1);
+                    System.out.println("entra");
+                    }
+                     else if(x > 2 && ctx.operacion_matematica().size() == 1)
+                              aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1);
+                else if (x == 2 && variable == "")
+                    aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1) + " " + ctx.operacion_matematica(0).OPMATEMATICAS(cantOperaciones-1).getText() + " t" + (x);
+                else if (x == 2 && variable != "")
+                {
+                    
+                    aux += "\nt" + (x) + " = " + " t" + (x-2) + " " + ctx.operacion_matematica(0).operacion_matematica(0).OPMATEMATICAS(cantOperaciones-1).getText() + " t" + (x-1) + "\n";
+                    aux += "\n" + ctx.ID().getText() + " = " + variable + " " + ctx.operacion_matematica(0).OPMATEMATICAS(0).toString() + " t" + (x); 
+                }
                 else
                     aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1) ;
             }
@@ -844,8 +882,10 @@ public class SintacticoBaseListener implements SintacticoListener {
                     aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-1) ;
             }
             
+            */
+            }
            aux+= "\n------------------------"; 
- 
+            
         }
 	@Override public void enterDatos_opMatematica(@NotNull SintacticoParser.Datos_opMatematicaContext ctx) { }
 	/**

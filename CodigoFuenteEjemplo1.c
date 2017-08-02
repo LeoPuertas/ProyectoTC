@@ -23,8 +23,7 @@ int main () {
     }
     else
         z = y + 5.5;
-	x = ( 6 + y ) * 6 + ( exec(x) * y );
-    x = ( 6 + y + c );
+
     return 0;
 }
 
