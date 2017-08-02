@@ -38,7 +38,7 @@ public class Main {
             //inicial. Debemos invocar ese método.
             ParseTree tree = parser.codigo();
             //Podríamos imprimir el árbol por consola.
-            //System.out.println("arbol:" + tree.toStringTree(parser));
+            System.out.println("arbol:" + tree.toStringTree(parser));
         }catch(Exception e){
             //cualquier error, capturamos la exception.
            // e.printStackTrace();

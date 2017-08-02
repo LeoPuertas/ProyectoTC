@@ -120,7 +120,7 @@ public class SintacticoBaseListener implements SintacticoListener {
 	@Override public void exitSi_entonces(@NotNull SintacticoParser.Si_entoncesContext ctx) { }
         @Override public void enterReturno_mal(@NotNull SintacticoParser.Returno_malContext ctx) {}
 	@Override public void exitReturno_mal(@NotNull SintacticoParser.Returno_malContext ctx) { 
-            System.out.println("Error, falta " + (ctx.datos() != null ? "dato a retornar " : "';' ") + ". Linea " + ctx.getStart().getLine());
+            System.out.println("Error, falta " + (ctx.datos() == null ? "dato a retornar " : "';' ") + ". Linea " + ctx.getStart().getLine());
             error = true;
         }
 	@Override public void enterMientras(@NotNull SintacticoParser.MientrasContext ctx) { }
@@ -790,14 +790,14 @@ public class SintacticoBaseListener implements SintacticoListener {
                                          }
                                          else
                                          {
-                                           System.out.println("else" + y);    
+                                             
                                            aux += "\n" + "t" + x + " = " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText() + " " + ctx.operacion_matematica(i).operacion_matematica(z).OPMATEMATICAS(y/2).getText() 
                                                    + " " + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y+1).getText() + "\n";
                                          }
                                     }
                                     else
                                     {
-                                        System.out.println("else2" + y);
+                                       
                                         if(ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size() != 2)
                                         {
                                             if(ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica().size() % 2 == 0)
@@ -811,7 +811,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                                                         + ctx.operacion_matematica(i).operacion_matematica(z).datos_opMatematica(y).getText()+ "\n"; 
                                             }
                                         }
-                                        System.out.println("aa");
+                                        
                                     }
                                 }
                                 x++;
@@ -825,6 +825,7 @@ public class SintacticoBaseListener implements SintacticoListener {
             }
             int cantOperaciones = ctx.operacion_matematica(0).OPMATEMATICAS().size();
             //System.out.println("x " + x + " cant " + cantOperaciones+ " " + ctx.operacion_matematica().size());
+          
             if( cantOperaciones == 1)
             {
                if(variable != "")
@@ -844,7 +845,7 @@ public class SintacticoBaseListener implements SintacticoListener {
                else
                {
                   if(ctx.operacion_matematica().size() > 1)
-                  {
+                  {  
                       aux += "\n" + ctx.ID().getText() + " = " + " t" + (x-2) + " " + ctx.operacion_matematica(0).OPMATEMATICAS(cantOperaciones-1).getText() + " t" + (x-1);
                   }
                    if(ctx.operacion_matematica().size() == 1)
@@ -852,6 +853,10 @@ public class SintacticoBaseListener implements SintacticoListener {
                        aux += "\n" + ctx.ID().getText() + " = "+ " t" + (x-1);
                    }
                }
+            }
+            else
+            {
+                 aux += "\n" + ctx.ID().getText() + " = "+ " t" + (x-1);
               
               /*
                 

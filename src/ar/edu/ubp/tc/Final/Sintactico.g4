@@ -42,7 +42,6 @@ VALOR:(ENTERO|FLOTANTE|CARACTER|CADENA|TRUEFALSE);
 TRUEFALSE: ('true'|'false');
 WS:[ \n\u000D]->skip;
 
-lista_variables_op: (variable_operacion PUNTOYCOMA)*;
 
 codigo: instrucciones+;
 instrucciones:  declaracion

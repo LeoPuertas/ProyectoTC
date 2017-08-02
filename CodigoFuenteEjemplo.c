@@ -1,6 +1,7 @@
 int _x = 0;
 
 double exec (double);
+double exec2 (double);
 
 double exec (double valor) {
     int i = 10;
@@ -23,8 +24,10 @@ int main () {
     }
     else
         z = y + 5.5;
-	x = ( 6 + y ) * 6 + ( exec(x) * y );
+    x = ( 6 + y ) * 6 + ( 7 * y );
     x = ( 6 + y + c );
+    x = 6 * (x * 3 + 4);
+    x = 6 * (x + 2);
     return 0;
 }
 
